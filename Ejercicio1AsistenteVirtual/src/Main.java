@@ -25,32 +25,51 @@ public class Main {
                 System.out.println("2. Ver la hora");
                 System.out.println("3. Registrar nombre de usuario");
                 System.out.println("4. Ver nombres de usuarios");
+                System.out.println("5. Cambiar de usuario");
                 System.out.println("0. Salir");
                 System.out.println(" ");
                 op = sc.nextLine();
 
-                switch(op){
+                switch(op) {
                     case "1":
-                        System.out.println("¡Holaa! " +nomb+ " Soy tu asistente virtual, estare aqui para ayudarte siempre:)" );
+                        System.out.println("¡Holaa! " + nomb + " Soy tu asistente virtual, estare aqui para ayudarte siempre:)");
                         break;
                     case "2":
                         int min = cal.get(Calendar.MINUTE);
-                        if (hor<=11) {
+                        if (hor <= 11) {
                             System.out.println("¿Quieres saber la hora? " + nomb + ", tranqui. Son las..." + hor + ":" + min + "am");
-                        }else if (hor==12){
+                        } else if (hor == 12) {
                             System.out.println("¿Quieres saber la hora? " + nomb + ", tranqui. Son las..." + 12 + ":" + min + "pm");
-                        }else{
+                        } else {
                             System.out.println("¿Quieres saber la hora? " + nomb + ", tranqui. Son las..." + (hor - 12) + ":" + min + "pm");
                         }
                         break;
                     case "3":
-                        System.out.println("¿Cual es el nombre del usuario que desea registrar?");
-                        String nombre = sc.nextLine();
-                        usuarios = verificacion(nombre,usuarios);
+                        String mas="";//De este depende si la persona quiere seguir registrando usuarios
+                        do{
+                            System.out.println("¿Cual es el nombre del usuario que desea registrar?");
+                            String nombre = sc.nextLine();
+                            usuarios = verificacion(nombre, usuarios);
+                            System.out.println("Quieres registrar otro usuario?");
+                            mas = sc.nextLine();
+                            if (mas.equalsIgnoreCase("no")) {
+                                System.out.println("Ya has acabado de registrar los usuarios");
+                            }else if(!mas.equalsIgnoreCase("si")){
+                                while (!(mas.equalsIgnoreCase("no") || mas.equalsIgnoreCase("si"))) {
+                                    System.out.println("Debe responder 'si' o 'no':");
+                                    mas = sc.nextLine();
+                                    if (mas.equalsIgnoreCase("no")) {System.out.println("Ya has acabado de registrar los usuarios");}
+                                }
+                            }
+                        }while(!mas.equalsIgnoreCase("no"));
                         break;
                     case "4":
                         System.out.println("Nombres de usuarios");
                         nombRegistrados(usuarios);
+                        break;
+                    case "5":
+                        System.out.println("Escribe un nombre de usuario que ya sepas que este registrado, en caso de que no exista se te seguira pidiendo uno hasta que digas que no");
+                        nomb= cambio_us(sc.next(),nomb,usuarios );
                         break;
                     case "0":
                         System.out.println("Es una pena que te vayas:( "+nomb+", nos vemos la proxima ocacion!");
@@ -93,7 +112,7 @@ public class Main {
         boolean existe=false;
         try{
             for (String usuario : usuarios) {
-                if (usuario.equals(nomb)) {
+                if (usuario.equalsIgnoreCase(nomb)) {
                     System.out.println("El nombre de usuario " + nomb + " ya existe:D");
                     existe = true;
                     break;
@@ -112,5 +131,27 @@ public class Main {
         for (String s : lista) {
             System.out.println(s);
         }
+    }
+    //Cambo de usuario
+    public static String cambio_us(String cnomb, String nomb, ArrayList<String> usuario){
+        boolean existe=false;
+        do{
+            for(int i=0;i<usuario.size();i++){
+                if (usuario.get(i).equalsIgnoreCase(cnomb)){
+                    existe=true;
+                    nomb=cnomb;
+                    break;
+                }
+            }
+            if(!existe){
+                System.out.println("Este usuario no existe, escriba otro o escriba 'no' para dejar de intentar");
+                cnomb=sc.nextLine();
+                if("no".equalsIgnoreCase(cnomb)){
+                    System.out.println("Seguiras con el mismo usuario");
+                    existe=true;
+                }
+            }
+        }while(!existe);
+        return nomb;
     }
 }
